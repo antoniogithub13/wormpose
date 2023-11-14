@@ -42,6 +42,7 @@ def parse_example(example, theta_dims: int):
         "data": tf.io.FixedLenFeature([], tf.string),
         "label0": tf.io.FixedLenFeature([theta_dims], tf.float32),
         "label1": tf.io.FixedLenFeature([theta_dims], tf.float32),
+        "length": tf.io.FixedLenFeature([], tf.int64),
     }
     parsed_features = tf.io.parse_single_example(example, features)
     return parsed_features
@@ -57,8 +58,8 @@ def parse_example_normalize_image(example, theta_dims: int, image_shape: Tuple[i
     img /= 255.0
 
     labels = [parsed_features["label0"], parsed_features["label1"]]
-
-    return img, labels
+    length = parsed_features["length"]
+    return img, labels, length
 
 
 class Writer(object):
@@ -74,11 +75,12 @@ class Writer(object):
     def __exit__(self, exc_type, exc_value, traceback):
         self.record_writer.close()
 
-    def write(self, image_data, label_0, label_1):
+    def write(self, image_data, label_0, label_1,length):
         feature = {
             "data": tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_data.tostring()])),
             "label0": tf.train.Feature(float_list=tf.train.FloatList(value=label_0.tolist())),
             "label1": tf.train.Feature(float_list=tf.train.FloatList(value=label_1.tolist())),
+            "length": tf.train.Feature(int64_list=tf.train.Int64List(value=[length])),
         }
         example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
         self.record_writer.write(example_proto.SerializeToString())
@@ -89,7 +91,7 @@ def parse_square_image(example, theta_dims: int):
     img = tf.io.decode_raw(parsed_features["data"], tf.uint8)
     img_size = tf.math.sqrt(tf.cast(tf.shape(img)[0], tf.float32))
     img = tf.reshape(img, (img_size, img_size))
-    return img, [parsed_features["label0"], parsed_features["label1"]]
+    return img, [parsed_features["label0"], parsed_features["label1"]], parsed_features["length"]
 
 
 def read(filename: str, theta_dims: int):
@@ -103,8 +105,8 @@ def read(filename: str, theta_dims: int):
         yield parsed_record
 
 
-def write_training_data_to_tfrecord(f, image_data, label_data, **kwargs):
-    f.write(image_data, label_data[0], label_data[1])
+def write_training_data_to_tfrecord(f, image_data, label_data, length, **kwargs):
+    f.write(image_data, label_data[0], label_data[1], length)
 
 
 class TfrecordLabeledDataWriter(GenericFileWriter):
