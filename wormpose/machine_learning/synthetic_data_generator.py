@@ -110,7 +110,8 @@ def _write_to_file(
             template_frame = templates.frames[cur_template_index]
             template_skeleton = templates.skeletons[cur_template_index]
             template_measurements = worm_measurements[video_name]
-            length = np.nanmean(template_measurements["worm_length"])
+            # length = np.nanmean(template_measurements["worm_length"])
+            
             synthetic_dataset.generate(
                 theta=label_data[cur_headtail_choice],
                 template_frame=template_frame,
@@ -118,6 +119,7 @@ def _write_to_file(
                 template_measurements=template_measurements,
                 out_image=image_data,
             )
+            length = target_worm_length
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
 
