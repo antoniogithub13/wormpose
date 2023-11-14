@@ -99,6 +99,8 @@ def _write_to_file(
     image_data = np.empty(synthetic_dataset.output_image_shape, dtype=np.uint8)
 
     postures_gen = postures_generation_fn()
+    print('write')
+
     with writer(out_filename) as synth_data_writer:
 
         for index, (cur_template_index, cur_headtail_choice) in enumerate(zip(template_indexes, headtail_choice)):
