@@ -232,7 +232,7 @@ class SyntheticDataset(object):
         # convert final image from float to uint8
         np.copyto(out_image, self._out_image, casting="unsafe")
 
-        return cur_bg_color, target_skel.copy()
+        return cur_bg_color, target_skel.copy(),target_worm_length 
 
     def _augment_skeleton(self, target_skel):
 
