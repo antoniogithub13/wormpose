@@ -123,7 +123,7 @@ def _write_to_file(
                 out_image=image_data,
             )
             
-            length = int(len(sk_len))#50#int(target_worm_length)
+            length = int(sk_len)#50#int(target_worm_length)
             # logging.debug("Your variable")
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
