@@ -83,6 +83,7 @@ def _write_to_file(
         measurements = templates.measurements[indexes]
         average_measurements = np.empty((measurements.shape[1:]), dtype=measurements.dtype)
         for name in measurements.dtype.names:
+            print(name)
             average_measurements[0][name] = np.nanmean(measurements[name])
         worm_measurements[video_name] = average_measurements
 
