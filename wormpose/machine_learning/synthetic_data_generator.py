@@ -110,7 +110,7 @@ def _write_to_file(
             template_frame = templates.frames[cur_template_index]
             template_skeleton = templates.skeletons[cur_template_index]
             template_measurements = worm_measurements[video_name]
-            length = 50
+            length = template_measurements[0]["length"]
             synthetic_dataset.generate(
                 theta=label_data[cur_headtail_choice],
                 template_frame=template_frame,
