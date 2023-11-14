@@ -119,7 +119,7 @@ def _write_to_file(
                 template_measurements=template_measurements,
                 out_image=image_data,
             )
-            length = target_worm_length
+            length = int(target_worm_length)
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
 
