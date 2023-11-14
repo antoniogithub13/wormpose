@@ -9,9 +9,9 @@ from multiprocessing import Process, Value
 from typing import Type, Callable, Generator, Optional
 
 import numpy as np
-import logging
+# import logging
 
-logging.basicConfig(level=logging.DEBUG)  # Set the logging level
+# logging.basicConfig(level=logging.DEBUG)  # Set the logging level
 
 from wormpose.dataset import Dataset
 from wormpose.machine_learning.generic_file_writer import GenericFileWriter
@@ -115,7 +115,7 @@ def _write_to_file(
             template_measurements = worm_measurements[video_name]
             # length = np.nanmean(template_measurements["worm_length"])
             
-            _, sk = synthetic_dataset.generate(
+            _, sk,sk_len  = synthetic_dataset.generate(
                 theta=label_data[cur_headtail_choice],
                 template_frame=template_frame,
                 template_skeleton=template_skeleton,
@@ -123,8 +123,8 @@ def _write_to_file(
                 out_image=image_data,
             )
             
-            length = int(len(sk))#50#int(target_worm_length)
-            logging.debug("Your variable")
+            length = int(len(sk_len))#50#int(target_worm_length)
+            # logging.debug("Your variable")
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
 
