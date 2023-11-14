@@ -115,7 +115,7 @@ def _write_to_file(
             template_measurements = worm_measurements[video_name]
             # length = np.nanmean(template_measurements["worm_length"])
             
-            synthetic_dataset.generate(
+            _, sk = synthetic_dataset.generate(
                 theta=label_data[cur_headtail_choice],
                 template_frame=template_frame,
                 template_skeleton=template_skeleton,
