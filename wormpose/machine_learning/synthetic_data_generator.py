@@ -9,6 +9,9 @@ from multiprocessing import Process, Value
 from typing import Type, Callable, Generator, Optional
 
 import numpy as np
+import logging
+
+logging.basicConfig(level=logging.DEBUG)  # Set the logging level
 
 from wormpose.dataset import Dataset
 from wormpose.machine_learning.generic_file_writer import GenericFileWriter
@@ -119,7 +122,9 @@ def _write_to_file(
                 template_measurements=template_measurements,
                 out_image=image_data,
             )
-            length = int(target_worm_length)
+            
+            length = 50#int(target_worm_length)
+            logging.debug("Your variable")
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
 
