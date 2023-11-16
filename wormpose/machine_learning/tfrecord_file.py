@@ -83,7 +83,7 @@ class Writer(object):
             "label0": tf.train.Feature(float_list=tf.train.FloatList(value=label_0.tolist())),
             "label1": tf.train.Feature(float_list=tf.train.FloatList(value=label_1.tolist())),
             "length": tf.train.Feature(float_list=tf.train.FloatList(value=[length])),
-            "skel": tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_data.tostring()])),
+            "skel": tf.train.Feature(bytes_list=tf.train.BytesList(value=[skel.tostring()])),
         }
         example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
         self.record_writer.write(example_proto.SerializeToString())
