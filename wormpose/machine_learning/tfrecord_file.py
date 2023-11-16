@@ -43,7 +43,7 @@ def parse_example(example, theta_dims: int):
         "label0": tf.io.FixedLenFeature([theta_dims], tf.float32),
         "label1": tf.io.FixedLenFeature([theta_dims], tf.float32),
         "length": tf.io.FixedLenFeature([], tf.float32),
-        "skel": tf.io.FixedLenFeature([theta_dims], tf.float32),
+        "skel": tf.io.FixedLenFeature([49], tf.float32),
     }
     parsed_features = tf.io.parse_single_example(example, features)
     return parsed_features
