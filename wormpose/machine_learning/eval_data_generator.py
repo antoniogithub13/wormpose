@@ -75,7 +75,7 @@ def generate(
                     cur_theta = skeleton_to_angle(cur_skel, theta_dims=theta_dims)
                     cur_theta_flipped = flip_theta(cur_theta)
 
-                    record_writer.write(image_data, cur_theta, cur_theta_flipped, len(cur_skel))
+                    record_writer.write(image_data, cur_theta, cur_theta_flipped, len(cur_skel),cur_skel)
                     csv_writer.writerow([video_name, int(eval_frame_index)])
 
     return num_samples
