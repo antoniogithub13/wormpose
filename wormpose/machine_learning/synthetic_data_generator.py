@@ -9,9 +9,6 @@ from multiprocessing import Process, Value
 from typing import Type, Callable, Generator, Optional
 
 import numpy as np
-# import logging
-
-# logging.basicConfig(level=logging.DEBUG)  # Set the logging level
 
 from wormpose.dataset import Dataset
 from wormpose.machine_learning.generic_file_writer import GenericFileWriter
@@ -102,7 +99,6 @@ def _write_to_file(
     image_data = np.empty(synthetic_dataset.output_image_shape, dtype=np.uint8)
 
     postures_gen = postures_generation_fn()
-    print('write')
 
     with writer(out_filename) as synth_data_writer:
 
@@ -113,7 +109,6 @@ def _write_to_file(
             template_frame = templates.frames[cur_template_index]
             template_skeleton = templates.skeletons[cur_template_index]
             template_measurements = worm_measurements[video_name]
-            # length = np.nanmean(template_measurements["worm_length"])
             
             _, sk,sk_len  = synthetic_dataset.generate(
                 theta=label_data[cur_headtail_choice],
@@ -123,8 +118,8 @@ def _write_to_file(
                 out_image=image_data,
             )
             
-            length = int(sk_len)#50#int(target_worm_length)
-            # logging.debug("Your variable")
+            length = sk_len
+            
             synth_data_writer.write(locals())
             progress_counter.value = index + 1
 
