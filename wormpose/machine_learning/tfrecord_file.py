@@ -43,7 +43,7 @@ def parse_example(example, theta_dims: int):
         "label0": tf.io.FixedLenFeature([theta_dims], tf.float32),
         "label1": tf.io.FixedLenFeature([theta_dims], tf.float32),
         "length": tf.io.FixedLenFeature([], tf.float32),
-        "skel": tf.io.FixedLenFeature([theta_dims], tf.float32),
+        "skel": tf.io.FixedLenFeature([], tf.string),
     }
     parsed_features = tf.io.parse_single_example(example, features)
     return parsed_features
@@ -83,7 +83,7 @@ class Writer(object):
             "label0": tf.train.Feature(float_list=tf.train.FloatList(value=label_0.tolist())),
             "label1": tf.train.Feature(float_list=tf.train.FloatList(value=label_1.tolist())),
             "length": tf.train.Feature(float_list=tf.train.FloatList(value=[length])),
-            "skel": tf.train.Feature(float_list=tf.train.FloatList(value=skel.tolist())),
+            "skel": tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_data.tostring()])),
         }
         example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
         self.record_writer.write(example_proto.SerializeToString())
