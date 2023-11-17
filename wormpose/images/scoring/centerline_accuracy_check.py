@@ -50,7 +50,7 @@ class CenterlineAccuracyCheck(object):
             return score, synth_skel
 
         self.last_real_image, skel_offset = self.real_dataset.process_frame(real_frame_orig)
-        cur_bg_color, synth_skel = self.synthetic_dataset.generate(
+        cur_bg_color, synth_skel,sklen,_ = self.synthetic_dataset.generate(
             theta,
             template_frame=template_frame,
             template_skeleton=template_skeleton,
