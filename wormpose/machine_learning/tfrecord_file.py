@@ -36,6 +36,33 @@ def get_tfrecord_dataset(
     dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
     return dataset
 
+def get_tfrecord_dataset_mod(
+    filenames,
+    image_shape: Tuple[int, int],
+    batch_size: int,
+    theta_dims: int,
+    is_train: bool,
+):
+    dataset = tf.data.TFRecordDataset(filenames, compression_type="GZIP")
+
+    if is_train:
+        dataset = dataset.shuffle(buffer_size=10000)
+        dataset = dataset.repeat()
+
+    dataset = dataset.map(
+        partial(
+            parse_example_normalize_image_extended,
+            theta_dims=theta_dims,
+            image_shape=image_shape,
+        ),
+        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+    )
+    dataset = dataset.batch(batch_size)
+    dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+    return dataset
+
+
+
 
 def parse_example(example, theta_dims: int):
     features = {
@@ -50,6 +77,20 @@ def parse_example(example, theta_dims: int):
 
 
 def parse_example_normalize_image(example, theta_dims: int, image_shape: Tuple[int, int]):
+    parsed_features = parse_example(example, theta_dims)
+
+    img = tf.io.decode_raw(parsed_features["data"], tf.uint8)
+    img = tf.reshape(img, (image_shape[0], image_shape[1]))
+    img = img[:, :, tf.newaxis]
+    img = tf.cast(img, tf.float32)
+    img /= 255.0
+
+    labels = [parsed_features["label0"], parsed_features["label1"]]
+    return img, labels
+
+
+
+def parse_example_normalize_image_extended(example, theta_dims: int, image_shape: Tuple[int, int]):
     parsed_features = parse_example(example, theta_dims)
 
     img = tf.io.decode_raw(parsed_features["data"], tf.uint8)
